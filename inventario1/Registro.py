@@ -3,9 +3,12 @@ import json
 import os
 import tkinter as tk
 from tkinter import ttk, messagebox
+import inicio
 
 USUARIOS_FILE = "USUARIO.json"
 
+def ventana_registro():
+    inicio.ventana_inicio()
 
 def guardar_usuario(usuario):
     with open(USUARIOS_FILE, "w") as f:
