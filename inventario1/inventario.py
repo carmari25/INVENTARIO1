@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 from productos import actualizar_stock, cargar_inventario
 
 
+
 def actualizar_interfaz():
     """Actualiza el Combobox y muestra el Spinbox si es necesario."""
     seleccion = opcion.get()
@@ -96,7 +97,7 @@ def actualizar_tabla():
 
 # Crear ventana principal
 raiz = tk.Tk()
-raiz.iconbitmap("inventario1/satur.ico.ico")
+raiz.iconbitmap("satur.ico.ico")
 raiz.geometry("1000x500")
 raiz.title("COSMOS IA")
 raiz.config(bg="#d5f5e3")
@@ -138,6 +139,7 @@ tabla = ttk.Treeview(raiz, columns=columnas, show="headings")
 for col in columnas:
     tabla.heading(col, text=col)
 tabla.place(x=30, y=150)
+
 
 
 

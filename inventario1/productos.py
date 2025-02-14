@@ -113,7 +113,7 @@ raiz = tk.Tk()
 raiz.title("Inventario - Cosmos IA")
 raiz.geometry("850x450")
 raiz.config(bg="#d5f5e3")
-raiz.iconbitmap("inventario1/satur.ico.ico")
+raiz.iconbitmap("satur.ico.ico")
 
 # Etiquetas y entradas para agregar productos
 tk.Label(raiz, text="Nombre:", bg="#eafaf1").place(x=20 , y=20)
@@ -156,3 +156,4 @@ btn_eliminar.place(x=280, y=345)
 
 # Ejecutar ventana
 raiz.mainloop()
+

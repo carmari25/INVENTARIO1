@@ -3,6 +3,7 @@ from tkinter import messagebox
 import json
 import os
 
+
 USUARIOS_FILE = "USUARIO.json"
 
 # Función para cargar usuarios desde el archivo JSON
@@ -50,7 +51,7 @@ def abrir_registro():
 # Ventana de Registro
 def ventana_registro():
     registro = Tk()
-    registro.iconbitmap("inventario1/satur.ico.ico")
+    registro.iconbitmap("satur.ico.ico")
     registro.title("Registro - COSMOS IA")
     registro.geometry("400x500")
     registro.config(bg="#abebc6")
@@ -101,7 +102,8 @@ def ventana_registro():
 def ventana_inicio():
     global inicio
     inicio = Tk()
-    inicio.iconbitmap("inventario1/satur.ico.ico")
+    inicio.title("INICIO")
+    inicio.iconbitmap("satur.ico.ico")
     inicio.geometry("400x500")
     inicio.config(bg="#d5f5e3")
 
@@ -112,11 +114,11 @@ def ventana_inicio():
     entry_usuario = Entry(frame1)
     entry_usuario.place(x=140, y=300)
 
-    Label(frame1, text="Cédula", fg="#006064", font=("Josefin Sans", 13), bg="#abebc6").place(x=40, y=350)
+    Label(frame1, text="Cédula", fg="#006064", font=("Josefin Sans", 13), bg="#abebc6").place(x=70, y=350)
     entry_cedula = Entry(frame1)
     entry_cedula.place(x=140, y=350)
 
-    usuario = PhotoImage(file="inventario1/usuario.png")
+    usuario = PhotoImage(file="usuario.png")
     Label(frame1, image=usuario).place(x=120, y=100)
 
     # Función para verificar inicio de sesión
@@ -134,9 +136,13 @@ def ventana_inicio():
             if user["nombre"] == nombre and user["cedula"] == cedula:
                 messagebox.showinfo("Acceso Concedido", "Bienvenido al sistema")
                 inicio.destroy()
+                inicio_inventario()
                 return
 
         messagebox.showerror("Error", "Usuario o cédula incorrectos.")
+    def inicio_inventario():
+        with open("inventario.py") as f:
+            exec(f.read())
 
     Button(inicio, text="Aceptar", font=("Arial", 12), command=iniciar_sesion).place(x=150, y=400)
     Button(inicio, text="Registrarse", font=("Arial", 12), command=abrir_registro).place(x=140, y=450)
