@@ -155,5 +155,5 @@ btn_eliminar = tk.Button(raiz, text="Eliminar Producto", command=eliminar_produc
 btn_eliminar.place(x=280, y=345)
 
 # Ejecutar ventana
-raiz.mainloop()
+
 

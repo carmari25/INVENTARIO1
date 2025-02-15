@@ -1,0 +1,14 @@
+[
+    {
+        "nombre": "Galletas Polvorosas",
+        "codigo": "0004",
+        "cantidad": 2,
+        "unidad": "Cantidad"
+    },
+    {
+        "nombre": "pp",
+        "codigo": "99",
+        "cantidad": 10,
+        "unidad": "Cantidad"
+    }
+]
