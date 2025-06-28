@@ -3,7 +3,7 @@ import json
 import os
 import tkinter as tk
 from tkinter import ttk, messagebox
-import inicio2
+import inicio2 as inicio2
 
 USUARIOS_FILE = "USUARIO.json"
 

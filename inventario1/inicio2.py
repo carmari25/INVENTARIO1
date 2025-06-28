@@ -4,7 +4,10 @@ import json
 import os
 
 
+
 USUARIOS_FILE = "USUARIO.json"
+
+
 
 # Función para cargar usuarios desde el archivo JSON
 def cargar_usuarios():
@@ -141,11 +144,13 @@ def ventana_inicio():
 
         messagebox.showerror("Error", "Usuario o cédula incorrectos.")
     def inicio_inventario():
-        with open("inventario.py") as f:
-            exec(f.read())
+        panel.ventana_inventario()
+    
 
     Button(inicio, text="Aceptar", font=("Arial", 12), command=iniciar_sesion).place(x=150, y=400)
     Button(inicio, text="Registrarse", font=("Arial", 12), command=abrir_registro).place(x=140, y=450)
+
+   
 
     inicio.mainloop()
 

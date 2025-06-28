@@ -1,14 +1,8 @@
 [
     {
-        "nombre": "Galletas Polvorosas",
+        "nombre": "galletas",
         "codigo": "0004",
-        "cantidad": 2,
-        "unidad": "Cantidad"
-    },
-    {
-        "nombre": "pp",
-        "codigo": "99",
-        "cantidad": 10,
+        "cantidad": 45,
         "unidad": "Cantidad"
     }
 ]
