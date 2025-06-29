@@ -1,14 +1,20 @@
 [
     {
-        "nombre": "cc",
-        "apellido": "rr",
-        "cedula": "22",
-        "numero": "11"
+        "nombre": "CARMARI",
+        "apellido": "REYES",
+        "cedula": "26745726",
+        "numero": "0001"
     },
     {
-        "nombre": "ww",
-        "apellido": "ee",
-        "cedula": "21",
-        "numero": "22"
+        "nombre": "CARI",
+        "apellido": "REYES",
+        "cedula": "2222",
+        "numero": "01"
+    },
+    {
+        "nombre": "juan",
+        "apellido": "reyes",
+        "cedula": "2233",
+        "numero": "02"
     }
 ]

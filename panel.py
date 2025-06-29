@@ -4,13 +4,18 @@ from tkinter import ttk, messagebox
 import json
 import os
 import inicio2
+import sys
 
+login_exitoso = inicio2.ventana_inicio()  # Ejecuta la ventana de inicio de sesión
 
+# Si el login falla o se cierra la ventana, terminamos el programa
+if not login_exitoso:
+    sys.exit()
 
 # Archivo de inventario
 INVENTARIO_FILE = "inventario.json"
 
-inicio2.ventana_inicio
+
 
 def cargar_inventario():
         """Carga los productos desde el archivo JSON."""
@@ -24,6 +29,15 @@ def guardar_inventario(inventario):
         """Guarda el inventario en el archivo JSON."""
         with open(INVENTARIO_FILE, "w") as f:
             json.dump(inventario, f, indent=4)
+
+def inicializar_inventario():
+    if not os.path.exists(INVENTARIO_FILE):
+        with open(INVENTARIO_FILE, "w") as f:
+            json.dump([], f)
+
+# Llamar al inicio del programa
+inicializar_inventario()
+
 
 
 def actualizar_stock(codigo, cantidad_vendida):
@@ -79,7 +93,7 @@ def productos_almacen():
         """Ventana del inventario."""
         almacenes = tk.Tk()
         almacenes.title("Inventario - Cosmos IA")
-        almacenes.geometry("850x450")
+        almacenes.geometry("900x450")
         almacenes.config(bg="#d5f5e3")
         almacenes.iconbitmap("satur.ico.ico")
 
@@ -89,6 +103,7 @@ def productos_almacen():
             codigo = entry_codigo.get()
             cantidad = entry_cantidad.get()
             unidad = combo_unidades.get()
+            precio = entry_precio.get()
 
             if not nombre or not codigo or not cantidad or not unidad:
                 messagebox.showwarning("Error", "Todos los campos son obligatorios")
@@ -109,24 +124,25 @@ def productos_almacen():
                     return
 
             # Agregar el producto
-            nuevo_producto = {"nombre": nombre, "codigo": codigo, "cantidad": cantidad, "unidad": unidad}
+            nuevo_producto = {"nombre": nombre, "codigo": codigo, "cantidad": cantidad, "unidad": unidad , "precio": precio}
             inventario.append(nuevo_producto)
             guardar_inventario(inventario)
 
             # Insertar en la tabla
-            tabla.insert("", "end", values=(nombre, codigo, cantidad, unidad))
+            tabla.insert("", "end", values=(nombre, codigo, cantidad, unidad, precio))
 
             # Limpiar entradas
             entry_nombre.delete(0, tk.END)
             entry_codigo.delete(0, tk.END)
             entry_cantidad.delete(0, tk.END)
             combo_unidades.set("")
+            entry_precio.delete(0, tk.END)
 
         def cargar_productos_en_tabla():
             """Carga los productos guardados en la taabla al iniciar."""
             inventario = cargar_inventario()
             for producto in inventario:
-                tabla.insert("", "end", values=(producto["nombre"], producto["codigo"], producto["cantidad"], producto["unidad"]))
+                tabla.insert("", "end", values=(producto["nombre"], producto["codigo"], producto["cantidad"], producto["unidad"], producto["precio"]))
 
         def eliminar_producto():
             """Elimina un producto del inventario según su código."""
@@ -169,11 +185,15 @@ def productos_almacen():
         combo_unidades = ttk.Combobox(almacenes, values=["Kg", "Lt", "Cantidad"], state="readonly")
         combo_unidades.place(x=350, y=30)
 
+        tk.Label(almacenes, text="Precio:", bg="#eafaf1").place(x=20, y=80)
+        entry_precio = tk.Entry(almacenes)
+        entry_precio.place(x=80, y=80)
+
         btn_agregar = tk.Button(almacenes, text="Agregar Producto", command=agregar_producto)
         btn_agregar.place(x=350, y=55)
 
         # Tabla
-        columnas = ("Nombre", "Código", "Cantidad", "Unidad")
+        columnas = ("Nombre", "Código", "Cantidad", "Unidad" , "Precio")
         tabla = ttk.Treeview(almacenes, columns=columnas, show="headings")
         for col in columnas:
             tabla.heading(col, text=col)
@@ -223,11 +243,12 @@ def vender_productos(tabla):
 
         messagebox.showinfo("Venta realizada", "Los productos han sido vendidos y actualizados en el inventario.")
 
-def agregar_producto(entry_nombre, entry_codigo, entry_cantidad, combo_unidades, tabla):
+def agregar_producto(entry_nombre, entry_codigo, entry_cantidad, combo_unidades, entry_precio,tabla):
         nombre = entry_nombre.get()
         codigo = entry_codigo.get()
         cantidad = entry_cantidad.get()
-        unidad = combo_unidades.get()  # Asegura que esto se obtiene correctamente
+        unidad = combo_unidades.get()
+        precio = entry_precio.get() # Asegura que esto se obtiene correctamente
 
         if not codigo or not cantidad or not unidad:
             messagebox.showwarning("Error", "Se requiere mas informacion")
@@ -248,18 +269,19 @@ def agregar_producto(entry_nombre, entry_codigo, entry_cantidad, combo_unidades,
                 return
 
         # Agregar el producto
-        nuevo_producto = {"nombre": nombre, "codigo": codigo, "cantidad": cantidad, "unidad": unidad}
+        nuevo_producto = {"nombre": nombre, "codigo": codigo, "cantidad": cantidad, "unidad": unidad, "precio": precio}
         inventario.append(nuevo_producto)
         guardar_inventario(inventario)
 
         # Insertar en la tabla
-        tabla.insert("", "end", values=(nombre, codigo, cantidad, unidad))
+        tabla.insert("", "end", values=(nombre, codigo, cantidad, unidad, precio))
 
         # Limpiar entradas
         entry_nombre.delete(0, tk.END)
         entry_codigo.delete(0, tk.END)
         entry_cantidad.delete(0, tk.END)
         combo_unidades.set("")
+        entry_precio.delete(0, tk.END)
 
 
 def ventana_inventario():

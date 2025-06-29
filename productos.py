@@ -8,13 +8,33 @@ INVENTARIO_FILE = "inventario.json"
 
 def cargar_inventario():
     if os.path.exists(INVENTARIO_FILE):
-        with open(INVENTARIO_FILE, "r") as f:
-            return json.load(f)
-    return []
+        try:
+            with open(INVENTARIO_FILE, "r") as f:
+                contenido = f.read()
+                if contenido.strip() == "":
+                    return []  # Archivo vacío → retorna lista vacía
+                datos = json.loads(contenido)
+                # Si el archivo no tiene "precio" en sus productos, lo agregamos
+                for producto in datos:
+                    if "precio" not in producto:
+                        producto["precio"] = 0.0  # Valor por defecto
+                return datos
+        except json.JSONDecodeError:
+            print("El archivo estaba corrupto. Se creará uno nuevo.")
+            return []
+    return []  # Si el archivo no existe
 
 def guardar_inventario(inventario):
     with open(INVENTARIO_FILE, "w") as f:
         json.dump(inventario, f, indent=4)
+
+def inicializar_inventario():
+    if not os.path.exists(INVENTARIO_FILE):
+        with open(INVENTARIO_FILE, "w") as f:
+            json.dump([], f)
+
+# Llamar al inicio del programa
+inicializar_inventario()
 
 def actualizar_stock(codigo, cantidad_vendida):
     inventario = cargar_inventario()
@@ -30,43 +50,54 @@ def actualizar_stock(codigo, cantidad_vendida):
 
 
 def agregar_producto():
-    """Añade un producto al inventario y lo muestra en la tabla."""
-    nombre = entry_nombre.get()
-    codigo = entry_codigo.get()
-    cantidad = entry_cantidad.get()
-    unidad = combo_unidades.get()
+    # Obtener valores (esto ya está bien)
+    nombre = entry_nombre.get().strip()
+    codigo = entry_codigo.get().strip()
+    cantidad = entry_cantidad.get().strip()
+    unidad = combo_unidades.get().strip()
+    precio = entry_precio.get().strip()  # Asegúrate de que entry_precio esté definido antes
     
-    if not nombre or not codigo or not cantidad or not unidad:
-        messagebox.showwarning("Error", "Todos los campos son obligatorios")
+    # Validar campos vacíos (incluyendo precio)
+    if not all([nombre, codigo, cantidad, unidad, precio]):  # precio ahora está incluido
+        messagebox.showwarning("Error", "Todos los campos son obligatorios (incluyendo precio)")
         return
     
+    # Validar tipos de datos (cantidad = entero, precio = float)
     try:
         cantidad = int(cantidad)
+        precio = float(precio)  # Convertir a float
     except ValueError:
-        messagebox.showwarning("Error", "La cantidad debe ser un número")
+        messagebox.showwarning("Error", "Cantidad debe ser entero y Precio debe ser número (ej: 10.99)")
         return
     
+    # Resto del código (verificación de código existente y guardado)...
+    
+    # Verificar si el código ya existe
     inventario = cargar_inventario()
+    if any(producto["codigo"] == codigo for producto in inventario):
+        messagebox.showwarning("Error", f"El código {codigo} ya existe")
+        return
     
-    # Verificar si el producto ya existe
-    for producto in inventario:
-        if producto["codigo"] == codigo:
-            messagebox.showwarning("Error", f"El producto con código {codigo} ya existe.")
-            return
+    # Crear nuevo producto
+    nuevo_producto = {
+        "nombre": nombre,
+        "codigo": codigo,
+        "cantidad": cantidad,
+        "unidad": unidad,
+        "precio": precio
+    }
     
-    # Agregar el producto
-    nuevo_producto = {"nombre": nombre, "codigo": codigo, "cantidad": cantidad, "unidad": unidad}
+    # Actualizar inventario y tabla
     inventario.append(nuevo_producto)
     guardar_inventario(inventario)
+    tabla.insert("", "end", values=(nombre, codigo, cantidad, unidad, precio))
     
-    # Insertar en la tabla
-    tabla.insert("", "end", values=(nombre, codigo, cantidad, unidad))
-    
-    # Limpiar entradas
+    # Limpiar campos
     entry_nombre.delete(0, tk.END)
     entry_codigo.delete(0, tk.END)
     entry_cantidad.delete(0, tk.END)
     combo_unidades.set("")
+    entry_precio.delete(0, tk.END)
     
     
    
@@ -75,7 +106,7 @@ def cargar_productos_en_tabla():
     """Carga los productos guardados en la tabla al iniciar."""
     inventario = cargar_inventario()
     for producto in inventario:
-        tabla.insert("", "end", values=(producto["nombre"], producto["codigo"], producto["cantidad"], producto["unidad"]))
+        tabla.insert("", "end", values=(producto["nombre"], producto["codigo"], producto["cantidad"], producto["unidad"], producto["precio"]))
 
 def eliminar_producto():
     """Elimina un producto del inventario según su código."""
@@ -128,20 +159,25 @@ tk.Label(raiz, text="Cantidad:", bg="#eafaf1").place(x=20 , y=60)
 entry_cantidad = tk.Entry(raiz)
 entry_cantidad.place(x=80 , y=60)
 
-tk.Label(raiz, text="Unidad:", bg="#eafaf1").place(x=350 , y=10)
+# Etiquetas y campos para Unidad y Precio (código corregido):
+tk.Label(raiz, text="Unidad:", bg="#eafaf1").place(x=350, y=10)
 combo_unidades = ttk.Combobox(raiz, values=["Kg", "Lt", "Cantidad"], state="readonly")
-combo_unidades.place(x=350 , y=30)
+combo_unidades.place(x=350, y=30)
+
+tk.Label(raiz, text="Precio:", bg="#eafaf1").place(x=350, y=60)  # Cambiado a y=60
+entry_precio = tk.Entry(raiz)
+entry_precio.place(x=400, y=60)  # Ajustado para alinearse con su label
 
 # Botón para agregar producto
 btn_agregar = tk.Button(raiz, text="Agregar Producto", command=agregar_producto)
 btn_agregar.place(x=350 , y=55)
 
 # Tabla para mostrar productos
-columnas = ("Nombre", "Código", "Cantidad", "Unidad")
+columnas = ("Nombre", "Código", "Cantidad", "Unidad", "Precio")
 tabla = ttk.Treeview(raiz, columns=columnas, show="headings")
 for col in columnas:
     tabla.heading(col, text=col)
-tabla.place(x=20 , y=100)
+    tabla.place(x=20 , y=100)
 
 # Cargar productos guardados en la tabla
 cargar_productos_en_tabla()

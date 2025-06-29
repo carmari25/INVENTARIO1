@@ -101,12 +101,30 @@ def ventana_registro():
 
     registro.mainloop()
 
-# Ventana de Inicio de Sesión
+
+
+
+#from tkinter import *
+from tkinter import messagebox
+import json
+import os
+
+USUARIOS_FILE = "USUARIO.json"
+
+# [Mantén aquí todas tus otras funciones: cargar_usuarios, guardar_usuario, etc...]
+
 def ventana_inicio():
     global inicio
+    
+    def on_closing():
+        inicio.destroy()
+        # Para manejar correctamente el cierre en sistemas con múltiples hilos
+        if 'login_exitoso' in locals():
+            return login_exitoso
+        return False
+
     inicio = Tk()
     inicio.title("INICIO")
-    inicio.iconbitmap("satur.ico.ico")
     inicio.geometry("400x500")
     inicio.config(bg="#d5f5e3")
 
@@ -121,37 +139,42 @@ def ventana_inicio():
     entry_cedula = Entry(frame1)
     entry_cedula.place(x=140, y=350)
 
-    usuario = PhotoImage(file="usuario.png")
-    Label(frame1, image=usuario).place(x=120, y=100)
+    try:
+        usuario_img = PhotoImage(file="usuario.png")
+        Label(frame1, image=usuario_img).place(x=120, y=100)
+    except:
+        pass
 
-    # Función para verificar inicio de sesión
+    login_exitoso = False
+
     def iniciar_sesion():
+        nonlocal login_exitoso
         nombre = entry_usuario.get().strip()
         cedula = entry_cedula.get().strip()
 
         if not nombre or not cedula:
             messagebox.showwarning("Error", "Todos los campos son obligatorios")
-            return
+            return False
 
         usuarios = cargar_usuarios()
-
         for user in usuarios:
             if user["nombre"] == nombre and user["cedula"] == cedula:
                 messagebox.showinfo("Acceso Concedido", "Bienvenido al sistema")
+                login_exitoso = True
                 inicio.destroy()
-                inicio_inventario()
-                return
+                return True
 
         messagebox.showerror("Error", "Usuario o cédula incorrectos.")
-    def inicio_inventario():
-        panel.ventana_inventario()
-    
+        return False
 
-    Button(inicio, text="Aceptar", font=("Arial", 12), command=iniciar_sesion).place(x=150, y=400)
-    Button(inicio, text="Registrarse", font=("Arial", 12), command=abrir_registro).place(x=140, y=450)
-
-   
+    inicio.protocol("WM_DELETE_WINDOW", on_closing)
+    Button(inicio, text="Aceptar", command=iniciar_sesion).place(x=150, y=400)
+    Button(inicio, text="Registrarse", command=abrir_registro).place(x=140, y=450)
 
     inicio.mainloop()
+    return login_exitoso
 
-ventana_inicio()
+# [Mantén aquí tus otras funciones como ventana_registro()]
+
+# Elimina la llamada a ventana_inicio() al final del archivo
+# para que no se ejecute automáticamente al importar

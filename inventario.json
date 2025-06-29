@@ -4,5 +4,12 @@
         "codigo": "003",
         "cantidad": 4,
         "unidad": "Kg"
+    },
+    {
+        "nombre": "CER",
+        "codigo": "0000",
+        "cantidad": 11,
+        "unidad": "Cantidad",
+        "precio": "1"
     }
 ]
