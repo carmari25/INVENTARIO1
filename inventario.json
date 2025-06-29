@@ -11,5 +11,12 @@
         "cantidad": 11,
         "unidad": "Cantidad",
         "precio": "1"
+    },
+    {
+        "nombre": "MANZANA",
+        "codigo": "000",
+        "cantidad": 7,
+        "unidad": "Kg",
+        "precio": "35"
     }
 ]

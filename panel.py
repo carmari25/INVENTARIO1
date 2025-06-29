@@ -3,14 +3,14 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import json
 import os
-import inicio2
+"""import inicio2
 import sys
 
 login_exitoso = inicio2.ventana_inicio()  # Ejecuta la ventana de inicio de sesión
 
 # Si el login falla o se cierra la ventana, terminamos el programa
 if not login_exitoso:
-    sys.exit()
+    sys.exit()"""
 
 # Archivo de inventario
 INVENTARIO_FILE = "inventario.json"
@@ -93,7 +93,7 @@ def productos_almacen():
         """Ventana del inventario."""
         almacenes = tk.Tk()
         almacenes.title("Inventario - Cosmos IA")
-        almacenes.geometry("900x450")
+        almacenes.geometry("1050x450")
         almacenes.config(bg="#d5f5e3")
         almacenes.iconbitmap("satur.ico.ico")
 
@@ -104,6 +104,9 @@ def productos_almacen():
             cantidad = entry_cantidad.get()
             unidad = combo_unidades.get()
             precio = entry_precio.get()
+
+            inventario.append(nuevo_producto)
+            guardar_inventario(inventario)
 
             if not nombre or not codigo or not cantidad or not unidad:
                 messagebox.showwarning("Error", "Todos los campos son obligatorios")
@@ -138,12 +141,19 @@ def productos_almacen():
             combo_unidades.set("")
             entry_precio.delete(0, tk.END)
 
+       
+            
         def cargar_productos_en_tabla():
-            """Carga los productos guardados en la taabla al iniciar."""
+            tabla.delete(*tabla.get_children())  # Limpiar tabla primero
             inventario = cargar_inventario()
             for producto in inventario:
-                tabla.insert("", "end", values=(producto["nombre"], producto["codigo"], producto["cantidad"], producto["unidad"], producto["precio"]))
-
+                tabla.insert("", "end", values=(
+                    producto["nombre"],
+                    producto["codigo"],
+                    producto["cantidad"],
+                    producto["unidad"],
+                    producto["precio"]
+                ))
         def eliminar_producto():
             """Elimina un producto del inventario según su código."""
             codigo = entry_eliminar_codigo.get()
@@ -193,11 +203,23 @@ def productos_almacen():
         btn_agregar.place(x=350, y=55)
 
         # Tabla
-        columnas = ("Nombre", "Código", "Cantidad", "Unidad" , "Precio")
+        # Tabla
+        columnas = ("Nombre", "Código", "Cantidad", "Unidad", "Precio")
         tabla = ttk.Treeview(almacenes, columns=columnas, show="headings")
+
+        # Ajustar columnas (ancho + stretch)
+        tabla.column("Nombre", width=200, stretch=tk.YES)  # Se expandirá
+        tabla.column("Código", width=100, stretch=tk.NO)
+        tabla.column("Cantidad", width=80, stretch=tk.NO)
+        tabla.column("Unidad", width=80, stretch=tk.NO)
+        tabla.column("Precio", width=100, stretch=tk.NO)
+
+        # Headings
         for col in columnas:
             tabla.heading(col, text=col)
-        tabla.place(x=20, y=100)
+
+        tabla.place(x=20, y=100, width=1000, height=300)  # Espacio amplio
+                
 
         cargar_productos_en_tabla()
 
@@ -208,6 +230,8 @@ def productos_almacen():
         btn_eliminar = tk.Button(almacenes, text="Eliminar Producto", command=eliminar_producto)
         btn_eliminar.place(x=280, y=345)
 
+         
+    
         almacenes.mainloop()
 
 
@@ -288,7 +312,7 @@ def ventana_inventario():
         """Ventana principal de inventario."""
         raiz = tk.Tk()
         raiz.iconbitmap("satur.ico.ico")
-        raiz.geometry("1000x500")
+        raiz.geometry("870x500")
         raiz.title("COSMOS IA")
         raiz.config(bg="#d5f5e3")
 
