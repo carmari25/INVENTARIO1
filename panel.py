@@ -3,14 +3,14 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import json
 import os
-"""import inicio2
+import inicio2
 import sys
 
 login_exitoso = inicio2.ventana_inicio()  # Ejecuta la ventana de inicio de sesión
 
 # Si el login falla o se cierra la ventana, terminamos el programa
 if not login_exitoso:
-    sys.exit()"""
+    sys.exit()
 
 # Archivo de inventario
 INVENTARIO_FILE = "inventario.json"
@@ -88,171 +88,234 @@ def agregar_a_lista_compras(entry_nombre, entry_codigo, entry_cantidad, combo_un
 
 
 
-
 def productos_almacen():
-        """Ventana del inventario."""
-        almacenes = tk.Tk()
-        almacenes.title("Inventario - Cosmos IA")
-        almacenes.geometry("1050x450")
-        almacenes.config(bg="#d5f5e3")
-        almacenes.iconbitmap("satur.ico.ico")
-
-        def agregar_producto():
-            """Añade un producto al inventario."""
-            nombre = entry_nombre.get()
-            codigo = entry_codigo.get()
-            cantidad = entry_cantidad.get()
-            unidad = combo_unidades.get()
-            precio = entry_precio.get()
-
-            inventario.append(nuevo_producto)
-            guardar_inventario(inventario)
-
-            if not nombre or not codigo or not cantidad or not unidad:
-                messagebox.showwarning("Error", "Todos los campos son obligatorios")
-                return
-
-            try:
-                cantidad = int(cantidad)
-            except ValueError:
-                messagebox.showwarning("Error", "La cantidad debe ser un número")
-                return
-
-            inventario = cargar_inventario()
-
-            # Verificar si el producto ya existe
-            for producto in inventario:
-                if producto["codigo"] == codigo:
-                    messagebox.showwarning("Error", f"El producto con código {codigo} ya existe.")
-                    return
-
-            # Agregar el producto
-            nuevo_producto = {"nombre": nombre, "codigo": codigo, "cantidad": cantidad, "unidad": unidad , "precio": precio}
-            inventario.append(nuevo_producto)
-            guardar_inventario(inventario)
-
-            # Insertar en la tabla
-            tabla.insert("", "end", values=(nombre, codigo, cantidad, unidad, precio))
-
-            # Limpiar entradas
-            entry_nombre.delete(0, tk.END)
-            entry_codigo.delete(0, tk.END)
-            entry_cantidad.delete(0, tk.END)
-            combo_unidades.set("")
-            entry_precio.delete(0, tk.END)
-
-       
-            
-        def cargar_productos_en_tabla():
-            tabla.delete(*tabla.get_children())  # Limpiar tabla primero
-            inventario = cargar_inventario()
-            for producto in inventario:
-                tabla.insert("", "end", values=(
-                    producto["nombre"],
-                    producto["codigo"],
-                    producto["cantidad"],
-                    producto["unidad"],
-                    producto["precio"]
-                ))
-        def eliminar_producto():
-            """Elimina un producto del inventario según su código."""
-            codigo = entry_eliminar_codigo.get()
-
-            if not codigo:
-                messagebox.showwarning("Error", "Debe ingresar un código para eliminar un producto.")
-                return
-
-            inventario = cargar_inventario()
-
-            if not any(prod["codigo"] == codigo for prod in inventario):
-                messagebox.showwarning("Error", f"No se encontró un producto con el código {codigo}.")
-                return
-
-            nuevo_inventario = [prod for prod in inventario if prod["codigo"] != codigo]
-            guardar_inventario(nuevo_inventario)
-
-            for item in tabla.get_children():
-                if tabla.item(item, "values")[1] == codigo:
-                    tabla.delete(item)
-
-            entry_eliminar_codigo.delete(0, tk.END)
-            messagebox.showinfo("Éxito", f"Producto con código {codigo} eliminado correctamente.")
-
-        # Interfaz gráfica
-        tk.Label(almacenes, text="Nombre:", bg="#eafaf1").place(x=20, y=20)
-        entry_nombre = tk.Entry(almacenes)
-        entry_nombre.place(x=80, y=20)
-
-        tk.Label(almacenes, text="Código:", bg="#eafaf1").place(x=20, y=40)
-        entry_codigo = tk.Entry(almacenes)
-        entry_codigo.place(x=80, y=40)
-
-        tk.Label(almacenes, text="Cantidad:", bg="#eafaf1").place(x=20, y=60)
-        entry_cantidad = tk.Entry(almacenes)
-        entry_cantidad.place(x=80, y=60)
-
-        tk.Label(almacenes, text="Unidad:", bg="#eafaf1").place(x=350, y=10)
-        combo_unidades = ttk.Combobox(almacenes, values=["Kg", "Lt", "Cantidad"], state="readonly")
-        combo_unidades.place(x=350, y=30)
-
-        tk.Label(almacenes, text="Precio:", bg="#eafaf1").place(x=20, y=80)
-        entry_precio = tk.Entry(almacenes)
-        entry_precio.place(x=80, y=80)
-
-        btn_agregar = tk.Button(almacenes, text="Agregar Producto", command=agregar_producto)
-        btn_agregar.place(x=350, y=55)
-
-        # Tabla
-        # Tabla
-        columnas = ("Nombre", "Código", "Cantidad", "Unidad", "Precio")
-        tabla = ttk.Treeview(almacenes, columns=columnas, show="headings")
-
-        # Ajustar columnas (ancho + stretch)
-        tabla.column("Nombre", width=200, stretch=tk.YES)  # Se expandirá
-        tabla.column("Código", width=100, stretch=tk.NO)
-        tabla.column("Cantidad", width=80, stretch=tk.NO)
-        tabla.column("Unidad", width=80, stretch=tk.NO)
-        tabla.column("Precio", width=100, stretch=tk.NO)
-
-        # Headings
-        for col in columnas:
-            tabla.heading(col, text=col)
-
-        tabla.place(x=20, y=100, width=1000, height=300)  # Espacio amplio
-                
-
-        cargar_productos_en_tabla()
-
-        tk.Label(almacenes, text="Código a eliminar:", bg="#eafaf1").place(x=20, y=350)
-        entry_eliminar_codigo = tk.Entry(almacenes)
-        entry_eliminar_codigo.place(x=130, y=350)
-
-        btn_eliminar = tk.Button(almacenes, text="Eliminar Producto", command=eliminar_producto)
-        btn_eliminar.place(x=280, y=345)
-
-         
+    """Ventana del inventario."""
+    almacenes = tk.Tk()
+    almacenes.title("Inventario - Cosmos IA")
+    almacenes.geometry("1050x600")
+    almacenes.config(bg="#d5f5e3")
     
-        almacenes.mainloop()
+    # --- Frame para campos de entrada ---
+    frame_entradas = tk.Frame(almacenes, bg="#eafaf1", padx=10, pady=10)
+    frame_entradas.place(x=0, y=0, width=1050, height=120)
+
+    # Widgets de entrada
+    tk.Label(frame_entradas, text="Nombre:").grid(row=0, column=0, sticky="w")
+    entry_nombre = tk.Entry(frame_entradas)
+    entry_nombre.grid(row=0, column=1)
+
+    tk.Label(frame_entradas, text="Código:").grid(row=1, column=0, sticky="w")
+    entry_codigo = tk.Entry(frame_entradas)
+    entry_codigo.grid(row=1, column=1)
+
+    tk.Label(frame_entradas, text="Cantidad:").grid(row=2, column=0, sticky="w")
+    entry_cantidad = tk.Entry(frame_entradas)
+    entry_cantidad.grid(row=2, column=1)
+
+    tk.Label(frame_entradas, text="Unidad:").grid(row=0, column=2, padx=(20,0))
+    combo_unidades = ttk.Combobox(frame_entradas, values=["Kg", "Lt", "Cantidad"], state="readonly")
+    combo_unidades.grid(row=0, column=3)
+
+    tk.Label(frame_entradas, text="Precio:").grid(row=1, column=2, padx=(20,0))
+    entry_precio = tk.Entry(frame_entradas)
+    entry_precio.grid(row=1, column=3)
+
+    # --- Frame para tabla ---
+    frame_tabla = tk.Frame(almacenes)
+    frame_tabla.place(x=10, y=130, width=1030, height=400)
+
+    columnas = ("Nombre", "Código", "Cantidad", "Unidad", "Precio")
+    tabla = ttk.Treeview(frame_tabla, columns=columnas, show="headings")
+    
+    # Configuración de columnas
+    tabla.column("Nombre", width=300, anchor="w")
+    tabla.column("Código", width=100, anchor="center")
+    tabla.column("Cantidad", width=100, anchor="center")
+    tabla.column("Unidad", width=100, anchor="center")
+    tabla.column("Precio", width=100, anchor="e")
+    
+    for col in columnas:
+        tabla.heading(col, text=col)
+    
+    # Scrollbar
+    scroll = ttk.Scrollbar(frame_tabla, orient="vertical", command=tabla.yview)
+    scroll.pack(side="right", fill="y")
+    tabla.configure(yscrollcommand=scroll.set)
+    tabla.pack(fill="both", expand=True)
+
+    # --- Sección para eliminar productos ---
+    frame_eliminar = tk.Frame(almacenes, bg="#d5f5e3")
+    frame_eliminar.place(x=10, y=540, width=1030, height=50)
+
+    tk.Label(frame_eliminar, text="Código a eliminar:").grid(row=0, column=0)
+    entry_eliminar_codigo = tk.Entry(frame_eliminar)
+    entry_eliminar_codigo.grid(row=0, column=1, padx=5)
+
+    # --- Funciones ---
+    
+
+    def agregar_producto():
+        """Agrega un nuevo producto al inventario."""
+        nombre = entry_nombre.get().strip()
+        codigo = entry_codigo.get().strip()
+        cantidad = entry_cantidad.get().strip()
+        unidad = combo_unidades.get().strip()
+        precio = entry_precio.get().strip()
+
+        # Validación
+        if not all([nombre, codigo, cantidad, unidad, precio]):
+            messagebox.showwarning("Error", "Todos los campos son obligatorios")
+            return
+
+        try:
+            cantidad = int(cantidad)
+            precio = float(precio)
+        except ValueError:
+            messagebox.showwarning("Error", "Cantidad y precio deben ser números válidos")
+            return
+
+        inventario = cargar_inventario()
+        
+        # Verificar código duplicado
+        if any(p["codigo"] == codigo for p in inventario):
+            messagebox.showwarning("Error", f"El código {codigo} ya existe")
+            return
+
+        # Agregar producto
+        nuevo_producto = {
+            "nombre": nombre,
+            "codigo": codigo,
+            "cantidad": cantidad,
+            "unidad": unidad,
+            "precio": precio
+        }
+        inventario.append(nuevo_producto)
+        guardar_inventario(inventario)
+        
+        # Actualizar tabla
+        tabla.insert("", "end", values=(nombre, codigo, cantidad, unidad, precio))
+    def cargar_productos_en_tabla():
+        
+        
+        # Limpiar campos
+        entry_nombre.delete(0, tk.END)
+        entry_codigo.delete(0, tk.END)
+        entry_cantidad.delete(0, tk.END)
+        combo_unidades.set("")
+        entry_precio.delete(0, tk.END)
+
+    def cargar_productos_en_tabla():
+        """Carga los productos del JSON en la tabla."""
+        tabla.delete(*tabla.get_children())
+        inventario = cargar_inventario()
+        for producto in inventario:
+            tabla.insert("", "end", values=(
+                producto["nombre"],
+                producto["codigo"],
+                producto["cantidad"],
+                producto["unidad"],
+                producto["precio"]
+            ))
+    
+
+    def eliminar_producto():
+        """Elimina un producto del inventario."""
+        codigo = entry_eliminar_codigo.get().strip()
+
+        if not codigo:
+            messagebox.showwarning("Error", "Ingrese un código para eliminar")
+            return
+
+        inventario = cargar_inventario()
+        
+        if not any(p["codigo"] == codigo for p in inventario):
+            messagebox.showwarning("Error", f"No existe un producto con código {codigo}")
+            return
+
+        # Confirmar eliminación
+        if not messagebox.askyesno("Confirmar", f"¿Eliminar producto {codigo}?"):
+            return
+
+        nuevo_inventario = [p for p in inventario if p["codigo"] != codigo]
+        guardar_inventario(nuevo_inventario)
+        
+        # Actualizar tabla
+        for item in tabla.get_children():
+            if tabla.item(item, "values")[1] == codigo:
+                tabla.delete(item)
+        
+        entry_eliminar_codigo.delete(0, tk.END)
+        messagebox.showinfo("Éxito", "Producto eliminado")
+
+    # --- Botones ---
+    btn_agregar = tk.Button(
+        frame_entradas, 
+        text="Agregar Producto", 
+        command=agregar_producto
+    )
+    btn_agregar.grid(row=2, column=3, pady=5)
+
+    btn_eliminar = tk.Button(
+        frame_eliminar,
+        text="Eliminar Producto",
+        command=eliminar_producto
+    )
+    btn_eliminar.grid(row=0, column=2, padx=10)
+
+    # --- Carga inicial ---
+    cargar_productos_en_tabla()
+    almacenes.mainloop()
 
 
 def vender_productos(tabla):
-        """Retira del inventario los productos de la lista de compras."""
         inventario = cargar_inventario()
         productos_vendidos = []
+        productos_no_existentes = []
+        productos_sin_stock = []
 
+        # Primera pasada: Verificar todo antes de hacer cambios
         for item in tabla.get_children():
             valores = tabla.item(item, "values")
             nombre, codigo, cantidad, unidad = valores
             cantidad = int(cantidad)
-
+            
+            # Buscar producto en inventario
+            producto_en_inventario = None
             for producto in inventario:
                 if producto["codigo"] == codigo:
-                    if producto["cantidad"] >= cantidad:
-                        producto["cantidad"] -= cantidad
-                        productos_vendidos.append(codigo)
-                    else:
-                        messagebox.showwarning("Error", f"No hay suficiente stock para {nombre}.")
-                        return
+                    producto_en_inventario = producto
+                    break
+            
+            if not producto_en_inventario:
+                productos_no_existentes.append(nombre)
+                continue
+                
+            if producto_en_inventario["cantidad"] < cantidad:
+                productos_sin_stock.append(nombre)
+                continue
+
+        # Mostrar errores si hay productos problemáticos
+        mensajes_error = []
+        if productos_no_existentes:
+            mensajes_error.append(f"Productos no existentes: {', '.join(productos_no_existentes)}")
+        if productos_sin_stock:
+            mensajes_error.append(f"Productos sin stock suficiente: {', '.join(productos_sin_stock)}")
+        
+        if mensajes_error:
+            messagebox.showerror("Error en venta", "\n".join(mensajes_error))
+            return
+
+        # Segunda pasada: Realizar la venta si todo está bien
+        for item in tabla.get_children():
+            valores = tabla.item(item, "values")
+            nombre, codigo, cantidad, unidad = valores
+            cantidad = int(cantidad)
+            
+            for producto in inventario:
+                if producto["codigo"] == codigo:
+                    producto["cantidad"] -= cantidad
+                    productos_vendidos.append(codigo)
+                    break
 
         # Filtrar productos agotados
         inventario = [prod for prod in inventario if prod["cantidad"] > 0]
@@ -262,11 +325,10 @@ def vender_productos(tabla):
         # Eliminar productos vendidos de la lista de compras
         for item in tabla.get_children():
             valores = tabla.item(item, "values")
-        if valores[1] in productos_vendidos:
+            if valores[1] in productos_vendidos:
                 tabla.delete(item)
 
         messagebox.showinfo("Venta realizada", "Los productos han sido vendidos y actualizados en el inventario.")
-
 def agregar_producto(entry_nombre, entry_codigo, entry_cantidad, combo_unidades, entry_precio,tabla):
         nombre = entry_nombre.get()
         codigo = entry_codigo.get()
@@ -313,135 +375,136 @@ def ventana_inventario():
         raiz = tk.Tk()
         raiz.iconbitmap("satur.ico.ico")
         raiz.geometry("870x500")
-        raiz.title("COSMOS IA")
+        raiz.title("COSMOS IA - Lista de Compras")
         raiz.config(bg="#d5f5e3")
 
-        menu=Menu(raiz)
-        raiz.config(menu=menu)
-            #menu
+        # ==================== MENÚ PRINCIPAL ====================
+        menu_principal = tk.Menu(raiz)
+        raiz.config(menu=menu_principal)
+        
+        # Menú Archivo
+        menu_archivo = tk.Menu(menu_principal, tearoff=0)
+        menu_archivo.add_command(label="Nuevo Archivo")
+        menu_archivo.add_command(label="Nueva Ventana")
+        menu_archivo.add_separator()
+        menu_archivo.add_command(label="Cerrar sesión", command=raiz.quit)
+        
+        # Menú Almacén
+        menu_almacen = tk.Menu(menu_principal, tearoff=0)
+        menu_almacen.add_command(label="Inventario", command=productos_almacen)
+        
+        # Añadir menús a la barra principal
+        menu_principal.add_cascade(label="Archivo", menu=menu_archivo)
+        menu_principal.add_cascade(label="Almacén", menu=menu_almacen)
 
-        archivo =Menu(menu, tearoff=0)
-        archivo.add_command(label="Nuevo Archivo")
-        archivo.add_command(label="Nueva Ventana")
-        archivo.add_command(label="Crear Archivo TXT")
-        archivo.add_separator()
-        archivo.add_command(label="Cerrar sesion")
+        # ==================== FRAME PRINCIPAL ====================
+        frame_principal = tk.Frame(raiz, bg="#eafaf1", bd=10, relief="ridge")
+        frame_principal.pack(fill="both", expand=True, padx=10, pady=10)
 
+        # ==================== SECCIÓN DE AGREGAR PRODUCTOS ====================
+        tk.Label(frame_principal, text="Agregar a Lista de Compras", 
+                fg="#006064", font=("Josefin Sans", 12, "bold"), 
+                bg="#eafaf1").grid(row=0, column=0, columnspan=3, pady=5, sticky="w")
 
-        almacenes =Menu(menu, tearoff=0)
-        almacenes.add_command(label="inventario" , command=productos_almacen)
+        # Campos de entrada
+        tk.Label(frame_principal, text="Nombre:", bg="#eafaf1").grid(row=1, column=0, sticky="w")
+        entry_nombre = tk.Entry(frame_principal)
+        entry_nombre.grid(row=1, column=1, pady=2, sticky="ew")
 
-        ventas =Menu(menu, tearoff=0)
-        ventas.add_command(label="Hoy")
-        ventas.add_command(label="ayer")
-        ventas.add_command(label="Esta semana")
-        ventas.add_command(label="Este mes")
+        tk.Label(frame_principal, text="Código:", bg="#eafaf1").grid(row=2, column=0, sticky="w")
+        entry_codigo = tk.Entry(frame_principal)
+        entry_codigo.grid(row=2, column=1, pady=2, sticky="ew")
 
-        ayuda=Menu(menu, tearoff=0)
-        ayuda.add_command(label="Contacto")
+        tk.Label(frame_principal, text="Cantidad:", bg="#eafaf1").grid(row=3, column=0, sticky="w")
+        entry_cantidad = tk.Entry(frame_principal)
+        entry_cantidad.grid(row=3, column=1, pady=2, sticky="ew")
 
-        menu.add_cascade(label ="Archivo", menu_=archivo)
-        menu.add_cascade(label="Almacen", menu_=almacenes)
-        menu.add_cascade(label="Ventas", menu_=ventas)
-        menu.add_cascade(label="Ayuda", menu_=ayuda)
+        tk.Label(frame_principal, text="Unidad:", bg="#eafaf1").grid(row=4, column=0, sticky="w")
+        combo_unidades = ttk.Combobox(frame_principal, values=["Kg", "Lt", "Unidad"], state="readonly")
+        combo_unidades.grid(row=4, column=1, pady=2, sticky="ew")
 
-            # Crear marco para los controles
-        miFrame = tk.Frame(raiz, bg="#eafaf1", width=500, height=600, bd=20, relief="ridge", cursor="arrow")
-        miFrame.pack(fill="x", expand=True)
+        # Botón de agregar a lista
+        btn_agregar = tk.Button(
+            frame_principal, 
+            text="Agregar a Lista", 
+            command=lambda: agregar_a_lista_compras(
+                entry_nombre, entry_codigo, entry_cantidad, 
+                combo_unidades, tabla
+            ),
+            bg="#2ecc71", fg="white"
+        )
+        btn_agregar.grid(row=5, column=0, columnspan=2, pady=10, sticky="ew")
 
-        tk.Label(miFrame, text="Bienvenido", fg="#006064", font=("Josefin Sans", 15), bg="#eafaf1").place(x=10, y=10) 
+        # ==================== TABLA DE LISTA DE COMPRAS ====================
+        frame_tabla = tk.Frame(frame_principal)
+        frame_tabla.grid(row=6, column=0, columnspan=3, pady=10, sticky="nsew")
 
-        tk.Label(miFrame, text="Producto:", fg="#006064", font=("Josefin Sans", 10), bg="#eafaf1").place(x=10, y=40)
-        entry_nombre = tk.Entry(miFrame)
-        entry_nombre.place(x=80, y=40)
-
-        tk.Label(miFrame, text="Código:", fg="#006064", font=("Josefin Sans", 10), bg="#eafaf1").place(x=10, y=70)
-        entry_codigo = tk.Entry(miFrame)
-        entry_codigo.place(x=80, y=70)
-
-        tk.Label(miFrame, text="Cantidad:", fg="#006064", font=("Josefin Sans", 10), bg="#eafaf1").place(x=10, y=100)
-        entry_cantidad = tk.Entry(miFrame)
-        entry_cantidad.place(x=80, y=100)
-
-        combobox = ttk.Combobox(miFrame, state="readonly", width=15)
-        combobox.place(x=400, y=20)
-
-        def actualizar_interfaz():
-                """Actualiza el Combobox y muestra el Spinbox si es necesario."""
-                seleccion = opcion.get()
-                combobox.set("")
-
-                if seleccion == 1:  # Cantidad
-                    combobox["values"] = ["N"]
-                    # Mostrar Spinbox
-                    
-                elif seleccion == 2:  # Kg
-                    combobox["values"] = ["Gramo", "Kilogramo", "Miligramo"]
-                    # Mostrar Spinbox
-
-                elif seleccion == 3:  # Lt
-                    combobox["values"] = ["Litro", "Galón", "Mililitro"]
-                    # Mostrar Spinbox
-
-        def eliminar_producto():
-            """Elimina un producto del inventario según su código."""
-            codigo = entry_eliminar_codigo.get()
-
-            if not codigo:
-                messagebox.showwarning("Error", "Debe ingresar un código para eliminar un producto.")
-                return
-
-            inventario = cargar_inventario()
-
-            if not any(prod["codigo"] == codigo for prod in inventario):
-                messagebox.showwarning("Error", f"No se encontró un producto con el código {codigo}.")
-                return
-
-            nuevo_inventario = [prod for prod in inventario if prod["codigo"] != codigo]
-            guardar_inventario(nuevo_inventario)
-
-            for item in tabla.get_children():
-                if tabla.item(item, "values")[1] == codigo:
-                    tabla.delete(item)
-
-            entry_eliminar_codigo.delete(0, tk.END)
-            messagebox.showinfo("Éxito", f"Producto con código {codigo} eliminado correctamente.")
-        # Tabla para mostrar productos agregados
         columnas = ("Nombre", "Código", "Cantidad", "Unidad")
-        tabla = ttk.Treeview(raiz, columns=columnas, show="headings")
+        tabla = ttk.Treeview(frame_tabla, columns=columnas, show="headings", height=8)
+        
+        # Configurar columnas
         for col in columnas:
             tabla.heading(col, text=col)
-        tabla.place(x=30, y=150)
+            tabla.column(col, width=120, anchor="center")
+        tabla.column("Nombre", width=200)
 
-        # Botón para agregar productos
-        btn_agregar = tk.Button(
-        miFrame, 
-        text="Agregar Producto", 
-        command=lambda: agregar_a_lista_compras(entry_nombre, entry_codigo, entry_cantidad, combobox, tabla)
-    )
-        btn_agregar.place(x=400, y=90)
+        # Scrollbar
+        scroll = ttk.Scrollbar(frame_tabla, orient="vertical", command=tabla.yview)
+        scroll.pack(side="right", fill="y")
+        tabla.configure(yscrollcommand=scroll.set)
+        tabla.pack(fill="both", expand=True)
 
-        
-        tk.Label(miFrame, text="En qué unidades:", bg="#eafaf1").place(x=230, y=10)
-        opcion = tk.IntVar()
+        # ==================== SECCIÓN DE ELIMINACIÓN ====================
+        frame_acciones = tk.Frame(frame_principal, bg="#eafaf1")
+        frame_acciones.grid(row=7, column=0, columnspan=3, pady=10, sticky="ew")
 
-        tk.Radiobutton(miFrame, text="Cantidad", bg="#eafaf1", variable=opcion, value=1, command=actualizar_interfaz).place(x=250, y=30)
-        tk.Radiobutton(miFrame, text="Kg", bg="#eafaf1", variable=opcion, value=2,command=actualizar_interfaz).place(x=250, y=50)
-        tk.Radiobutton(miFrame, text="Lt", bg="#eafaf1", variable=opcion, value=3,command=actualizar_interfaz).place(x=250, y=70)
+        # Botón para eliminar producto seleccionado
+        btn_eliminar = tk.Button(
+            frame_acciones, 
+            text="Eliminar Seleccionado", 
+            command=lambda: eliminar_seleccionado(tabla),
+            bg="#e74c3c", fg="white"
+        )
+        btn_eliminar.pack(side="left", padx=5)
 
+        # Botón para vaciar toda la lista
+        btn_vaciar = tk.Button(
+            frame_acciones,
+            text="Vaciar Lista",
+            command=lambda: vaciar_lista(tabla),
+            bg="#f39c12", fg="white"
+        )
+        btn_vaciar.pack(side="left", padx=5)
 
-        tk.Label(almacenes, text="Código a eliminar:", bg="#eafaf1").place(x=20, y=350)
-        entry_eliminar_codigo = tk.Entry(almacenes)
-        entry_eliminar_codigo.place(x=130, y=350)
+        # ==================== BOTÓN DE VENTA ====================
+        btn_vender = tk.Button(
+            frame_principal,
+            text="Realizar Venta",
+            command=lambda: vender_productos(tabla),
+            bg="#3498db", fg="white"
+        )
+        btn_vender.grid(row=8, column=0, columnspan=3, pady=10, sticky="ew")
 
-        btn_eliminar = tk.Button(almacenes, text="Eliminar Producto", command=eliminar_producto)
-        btn_eliminar.place(x=600, y=400)
+        # ==================== FUNCIONES ADICIONALES ====================
+        def eliminar_seleccionado(tabla):
+            """Elimina el producto seleccionado de la lista de compras."""
+            seleccionado = tabla.selection()
+            if not seleccionado:
+                messagebox.showwarning("Advertencia", "Seleccione un producto para eliminar")
+                return
+            tabla.delete(seleccionado)
 
-        btn_vender = tk.Button(miFrame, text="Vender", command=lambda: vender_productos(tabla))
-        btn_vender.place(x=700, y=400)
+        def vaciar_lista(tabla):
+            """Elimina todos los productos de la lista de compras."""
+            if not messagebox.askyesno("Confirmar", "¿Vaciar toda la lista de compras?"):
+                return
+            for item in tabla.get_children():
+                tabla.delete(item)
 
-
-            # Cargar productos guardados en la tabla
+        # Configurar grid
+        frame_principal.grid_columnconfigure(1, weight=1)
+                
+   # Cargar productos guardados en la tabla
         raiz.mainloop()
 
 ventana_inventario()

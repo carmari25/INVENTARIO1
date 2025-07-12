@@ -1,22 +1,30 @@
 [
     {
-        "nombre": "Manzana",
-        "codigo": "003",
-        "cantidad": 4,
-        "unidad": "Kg"
-    },
-    {
-        "nombre": "CER",
-        "codigo": "0000",
-        "cantidad": 11,
-        "unidad": "Cantidad",
-        "precio": "1"
-    },
-    {
         "nombre": "MANZANA",
         "codigo": "000",
         "cantidad": 7,
         "unidad": "Kg",
         "precio": "35"
+    },
+    {
+        "nombre": "PERA",
+        "codigo": "0002",
+        "cantidad": 27,
+        "unidad": "Cantidad",
+        "precio": 32.0
+    },
+    {
+        "nombre": "CAR",
+        "codigo": "1111",
+        "cantidad": 22,
+        "unidad": "Cantidad",
+        "precio": 23.0
+    },
+    {
+        "nombre": "pasta",
+        "codigo": "333",
+        "cantidad": 110,
+        "unidad": "Cantidad",
+        "precio": 150.0
     }
 ]
